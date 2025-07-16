@@ -1,7 +1,7 @@
 import * as R from '@radix-ui/themes';
 import { Image } from 'lucide-react';
 import { useFetcher } from 'react-router';
-import { useSlateStatic } from 'slate-react';
+import { useSlate } from 'slate-react';
 import { insertImage, setImage } from './with-images';
 import { useEffect, useRef, useState } from 'react';
 import type { ImageElement } from '../../custom-types';
@@ -12,7 +12,7 @@ export default function UpsertImageDialog({
 }: {
   element?: ImageElement;
 }) {
-  const editor = useSlateStatic();
+  const editor = useSlate();
   const fetcher = useFetcher();
   const ref = useRef<HTMLInputElement>(null);
   const [pickedImage, setPickedImage] = useState<File | null>(null);
@@ -56,7 +56,7 @@ export default function UpsertImageDialog({
       <R.Tooltip content={existingImageId ? 'Change Image' : 'Insert Image'}>
         <R.Dialog.Trigger>
           <R.IconButton
-            disabled={isInImage() && !element}
+            disabled={isInImage(editor) && !element}
             variant={existingImageId ? 'solid' : 'outline'}
             onClick={() => setOpen(true)}
           >

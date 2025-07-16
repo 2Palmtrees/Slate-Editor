@@ -1,6 +1,6 @@
 import imageExtensions from 'image-extensions';
 import isUrl from 'is-url';
-import {  Transforms } from 'slate';
+import { Transforms } from 'slate';
 
 import type {
   CustomEditor,
@@ -48,7 +48,7 @@ export function insertImage(editor: CustomEditor, url: string) {
   const text = { text: '' };
   const image: ImageElement = { type: 'image', url, children: [text] };
 
-  if (isInImage()) {
+  if (isInImage(editor)) {
     return;
   }
 

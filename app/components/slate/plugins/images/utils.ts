@@ -17,8 +17,7 @@ export const IMAGE_STYLES = [
 type ImageStyleType = (typeof IMAGE_STYLES)[number];
 export type CustomImageElementFormat = CustomElementType | ImageStyleType;
 
-export function isInImage() {
-  const editor = useSlate()
+export function isInImage(editor: CustomEditor,) {
   const [match] = Editor.nodes(editor, {
     match: (n) =>
       !Editor.isEditor(n) &&

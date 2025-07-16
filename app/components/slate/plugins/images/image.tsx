@@ -30,7 +30,7 @@ export function Image({ props }: { props: RenderElementProps }) {
   const [over, setOver] = useState(false);
   const fetcher = useFetcher();
 
-  // console.log('does is have a figure?', figure);
+  // console.log(element, 'does is have a figure?', figure);
 
   return (
     <R.Flex
@@ -117,7 +117,7 @@ export function Image({ props }: { props: RenderElementProps }) {
                     confirm('Please confirm you want to delete this record.')
                   ) {
                     Transforms.removeNodes(editor, {
-                      at: figure !== undefined ? [figure[1]] : path,
+                      at: figure ? figure[1] : path,
                     });
                     fetcher.submit(
                       {},
