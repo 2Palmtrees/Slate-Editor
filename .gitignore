@@ -1,8 +1,17 @@
 .DS_Store
 /node_modules/
+uploads
 
 # React Router
 /.react-router/
 /build/
 
 TODO*
+
+# env files
+.env*.local
+.env*.production
+.env
+
+# Database
+*.db
