@@ -65,6 +65,9 @@ export function toggleBlock(editor: CustomEditor, format: CustomElementFormat) {
     return;
   }
 
+  console.log(format, isActive);
+  
+
   Transforms.unwrapNodes(editor, {
     match: (n) =>
       !Editor.isEditor(n) &&
@@ -90,6 +93,7 @@ export function toggleBlock(editor: CustomEditor, format: CustomElementFormat) {
         : format,
     };
   }
+  Transforms.setNodes<Element>(editor, newProperties);
 
   if (!isActive && isList) {
     const block = { type: format, children: [] };

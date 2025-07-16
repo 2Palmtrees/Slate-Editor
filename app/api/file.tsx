@@ -5,8 +5,6 @@ export async function loader({ params }: Route.LoaderArgs) {
   const storageKey = getStorageKey(params.id);
   const file = await fileStorage.get(storageKey);
 
-  console.log('storageKey', storageKey);
-
   if (!file) {
     throw new Response('User avatar not found', {
       status: 404,

@@ -16,3 +16,4 @@ My implementation of the Slate editor.
 - 'image' implementation (uses form-data-parser in combi with React Router)
 - option for floating images
 - option for wrapping images in figure with a caption
+- a list with checkmarks

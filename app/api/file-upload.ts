@@ -9,13 +9,12 @@ import * as crypto from 'node:crypto';
 import { data, type ActionFunctionArgs } from 'react-router';
 
 export async function action({ request }: ActionFunctionArgs) {
-  let imageId;
+  let imageId = crypto.randomBytes(20).toString('hex');
   const uploadHandler = async (fileUpload: FileUpload) => {
     if (
       fileUpload.fieldName === 'image' &&
       fileUpload.type.startsWith('image/')
     ) {
-      imageId = crypto.randomBytes(20).toString('hex');
       let storageKey = getStorageKey(imageId);
       await fileStorage.set(storageKey, fileUpload);
       return fileStorage.get(storageKey);
@@ -23,7 +22,7 @@ export async function action({ request }: ActionFunctionArgs) {
   };
   const errors = {};
   try {
-    let formData = await parseFormData(
+    await parseFormData(
       request,
       { maxFiles: 5, maxFileSize: 5 * 1024 * 1024 }, // 5 Mb
       uploadHandler
@@ -41,8 +40,6 @@ export async function action({ request }: ActionFunctionArgs) {
   if (Object.keys(errors).length > 0) {
     return data({ errors }, { status: 400 });
   } else {
-    // const file = formData.get('image');
-    // console.log('File', file, imageId);
     return { imageId };
   }
 }
