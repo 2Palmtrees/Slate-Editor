@@ -1,2 +1,0 @@
-- CLEAN UP IMAGE STUFF
-- Rerender after image change?
