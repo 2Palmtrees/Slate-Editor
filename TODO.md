@@ -1,5 +1,2 @@
 - CLEAN UP IMAGE STUFF
 - Rerender after image change?
-- Rename this project to Slate Editor
-- Make repository for in on github
-- Write the readme
