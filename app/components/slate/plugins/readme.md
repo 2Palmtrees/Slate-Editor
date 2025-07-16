@@ -1,0 +1,2 @@
+- dir 'slate-table' copied from https://github.com/nlulic/slate-table
+- dir 'table' uses above plugin and adds functionality like 'align, stretch, heading and backplate' and used in turn the Radix Theme to style the table.
