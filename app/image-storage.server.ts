@@ -14,6 +14,9 @@ export const fileStorage = new LocalFileStorage('./uploads/images');
 
 export const fileStorageS3 = new S3FileStorage(s3Client, 'bart-joostink-test1');
 
-export function getStorageKey(imageId: string) {
-  return `image-${imageId}`;
+export function getStorageKey(
+  imageId: string,
+  size: 'xlarge' | 'large' | 'medium' | 'small'
+) {
+  return `${imageId}-${size}`;
 }

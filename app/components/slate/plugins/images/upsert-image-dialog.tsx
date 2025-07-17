@@ -94,7 +94,7 @@ export default function UpsertImageDialog({
           )}
           {!pickedImage && existingImageId && (
             <img
-              src={`http://localhost:5173/image/${existingImageId}`}
+              src={`http://localhost:5173/image/${existingImageId}-small`}
               style={{
                 maxHeight: '100%',
                 maxWidth: '100%',

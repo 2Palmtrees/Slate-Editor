@@ -16,8 +16,9 @@ import { withTable } from './plugins/slate-table';
 import { Table, Td } from './plugins/table/elements';
 import withImages from './plugins/images/with-images';
 import type { CustomEditor } from './custom-types';
-import { Figure, Image } from './plugins/images/image';
+import { Image } from './plugins/images/image';
 import { withCorrectVoidBehavior } from './plugins/with-correct-void-behavior';
+import { Figure } from './plugins/images/figure';
 
 export default function SlateEditor({
   content,
@@ -241,7 +242,7 @@ export default function SlateEditor({
         readOnly={!isAdmin}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
-        placeholder="Enter some rich text…"
+        placeholder='Enter some rich text…'
         spellCheck
         autoFocus
         style={{ padding: '1rem' }}

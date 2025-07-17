@@ -10,6 +10,7 @@ import {
 } from 'slate-react';
 import UpsertImageButton from './upsert-image-dialog';
 import StyleImageDialog from './style-image-dialog';
+import type { ImageSizes } from '~/api/sharpen';
 
 export function Image({ props }: { props: RenderElementProps }) {
   const { attributes, children, element } = props;
@@ -29,6 +30,12 @@ export function Image({ props }: { props: RenderElementProps }) {
 
   const [over, setOver] = useState(false);
   const fetcher = useFetcher();
+
+  let imageSize: ImageSizes = 'medium';
+  if (element.style === 'stretch') {
+    imageSize = 'large';
+  }
+  let imageSrc = `${element.url}-${imageSize}`;
 
   // console.log(element, 'does is have a figure?', figure);
 
@@ -91,7 +98,7 @@ export function Image({ props }: { props: RenderElementProps }) {
       >
         {children}
         <img
-          src={element.url}
+          src={imageSrc}
           style={{
             objectFit: 'cover',
             width: '100%',
@@ -138,72 +145,4 @@ export function Image({ props }: { props: RenderElementProps }) {
   );
 }
 
-export function Figure({ props }: { props: RenderElementProps }) {
-  const { attributes, children, element } = props;
 
-  if (element.type !== 'figure') {
-    throw new Error('Element "Figure" must be of type "image"');
-  }
-  const editor = useSlateStatic();
-  const path = ReactEditor.findPath(editor, element);
-  const [image] = Editor.nodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && Element.isAncestor(n) && n.type === 'image',
-    at: path,
-  });
-  let imageStyle = image && image[0].style;
-
-  // console.log('image', image);
-
-  return (
-    <R.Flex
-      {...attributes}
-      my='2'
-      mr={imageStyle === 'float-left' ? '2' : '0'}
-      ml={imageStyle === 'float-right' ? '2' : '0'}
-      justify={
-        imageStyle === 'align-center'
-          ? 'center'
-          : imageStyle === 'align-right'
-          ? 'end'
-          : 'start'
-      }
-      width={{
-        initial: '100%',
-        sm:
-          imageStyle === 'stretch' ||
-          imageStyle === 'align-left' ||
-          imageStyle === 'align-center' ||
-          imageStyle === 'align-right' ||
-          imageStyle === undefined
-            ? '100%'
-            : '50%',
-      }}
-      style={{
-        float:
-          imageStyle === 'float-left'
-            ? 'left'
-            : imageStyle === 'float-right'
-            ? 'right'
-            : 'none',
-      }}
-    >
-      <R.Flex
-        asChild
-        direction='column'
-        gap='2'
-        width={{
-          initial: '100%',
-          sm:
-            imageStyle === 'stretch' ||
-            imageStyle === 'float-right' ||
-            imageStyle === 'float-left'
-              ? '100%'
-              : '50%',
-        }}
-      >
-        <figure>{children}</figure>
-      </R.Flex>
-    </R.Flex>
-  );
-}

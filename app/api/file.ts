@@ -1,9 +1,8 @@
-import { fileStorage, getStorageKey } from '~/image-storage.server';
+import { fileStorageS3 } from '~/image-storage.server';
 import type { Route } from './+types/file';
 
 export async function loader({ params }: Route.LoaderArgs) {
-  const storageKey = getStorageKey(params.id);
-  const file = await fileStorage.get(storageKey);
+  const file = await fileStorageS3.get(params.storageKey);
 
   if (!file) {
     throw new Response('File not found', {

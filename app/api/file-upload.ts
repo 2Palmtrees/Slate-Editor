@@ -4,20 +4,20 @@ import {
   parseFormData,
   type FileUpload,
 } from '@mjackson/form-data-parser';
-import { fileStorage, getStorageKey } from '~/image-storage.server';
 import * as crypto from 'node:crypto';
-import { data, type ActionFunctionArgs } from 'react-router';
+import { data, redirect, type ActionFunctionArgs } from 'react-router';
+import { getSession } from '~/sessions.server';
+import type { Route } from './+types/file-upload';
+import { sharpenImage } from './sharpen';
 
 export async function action({ request }: ActionFunctionArgs) {
-  let imageId = crypto.randomBytes(20).toString('hex');
+  let imageId = crypto.randomBytes(8).toString('hex');
   const uploadHandler = async (fileUpload: FileUpload) => {
     if (
       fileUpload.fieldName === 'image' &&
       fileUpload.type.startsWith('image/')
     ) {
-      let storageKey = getStorageKey(imageId);
-      await fileStorage.set(storageKey, fileUpload);
-      return fileStorage.get(storageKey);
+      return await sharpenImage(imageId, fileUpload);
     }
   };
   const errors = {};
@@ -33,7 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
     } else if (error instanceof MaxFileSizeExceededError) {
       errors.image = 'Files may not be larger than 5 MiB';
     } else {
-      errors.image = 'An unknown error occurred';
+      errors.image = 'An unknown error occurred!';
     }
   }
 
@@ -41,5 +41,12 @@ export async function action({ request }: ActionFunctionArgs) {
     return data({ errors }, { status: 400 });
   } else {
     return { imageId };
+  }
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  let session = await getSession(request.headers.get('Cookie'));
+  if (!session.has('userId')) {
+    return redirect('/');
   }
 }
