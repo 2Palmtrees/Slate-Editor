@@ -20,16 +20,16 @@ export default function UpsertImageDialog({
 
   let data = fetcher.data;
   let errors = fetcher.data?.errors;
-  let existingImageId = element?.url.split('/').pop();
+  let existingImageLocation = element?.url.split('/').pop();
 
   useEffect(() => {
-    if (fetcher.data?.imageId) {
-      let url = `http://localhost:5173/image/${fetcher.data?.imageId}`;
-      if (existingImageId) {
+    if (fetcher.data?.imageLocation) {
+      let url = `http://localhost:5173/image/${fetcher.data?.imageLocation}`;
+      if (existingImageLocation) {
         setImage(editor, url);
         fetcher.submit(
           {},
-          { method: 'post', action: `image/${existingImageId}/remove` }
+          { method: 'post', action: `image/${existingImageLocation}/remove` }
         );
       } else {
         insertImage(editor, url);
@@ -53,11 +53,11 @@ export default function UpsertImageDialog({
 
   return (
     <R.Dialog.Root open={open} onOpenChange={setOpen}>
-      <R.Tooltip content={existingImageId ? 'Change Image' : 'Insert Image'}>
+      <R.Tooltip content={existingImageLocation ? 'Change Image' : 'Insert Image'}>
         <R.Dialog.Trigger>
           <R.IconButton
             disabled={isInImage(editor) && !element}
-            variant={existingImageId ? 'solid' : 'outline'}
+            variant={existingImageLocation ? 'solid' : 'outline'}
             onClick={() => setOpen(true)}
           >
             <Image width='18' height='18' />
@@ -92,9 +92,9 @@ export default function UpsertImageDialog({
               }}
             />
           )}
-          {!pickedImage && existingImageId && (
+          {!pickedImage && existingImageLocation && (
             <img
-              src={`http://localhost:5173/image/${existingImageId}-small`}
+              src={`http://localhost:5173/image/${existingImageLocation}-small`}
               style={{
                 maxHeight: '100%',
                 maxWidth: '100%',

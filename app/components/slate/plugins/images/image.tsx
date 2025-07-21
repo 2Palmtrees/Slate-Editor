@@ -26,22 +26,20 @@ export function Image({ props }: { props: RenderElementProps }) {
   });
 
   const isReadOnly = ReactEditor.isReadOnly(editor);
-  const imageId = element.url.split('/').pop();
-
   const [over, setOver] = useState(false);
   const fetcher = useFetcher();
 
+  let imageLocation = element.url.split('/').pop();
   let imageSize: ImageSizes = 'medium';
   if (element.style === 'stretch') {
     imageSize = 'large';
   }
   let imageSrc = `${element.url}-${imageSize}`;
 
-  // console.log(element, 'does is have a figure?', figure);
-
   return (
     <R.Flex
       {...attributes}
+      contentEditable={false}
       justify={
         figure !== undefined
           ? 'start'
@@ -54,7 +52,6 @@ export function Image({ props }: { props: RenderElementProps }) {
       my={figure === undefined ? '2' : '0'}
       mr={element.style === 'float-left' && figure === undefined ? '2' : '0'}
       ml={element.style === 'float-right' && figure === undefined ? '2' : '0'}
-      contentEditable={false}
       width={{
         initial: '100%',
         sm:
@@ -128,7 +125,10 @@ export function Image({ props }: { props: RenderElementProps }) {
                     });
                     fetcher.submit(
                       {},
-                      { method: 'post', action: `image/${imageId}/remove` }
+                      {
+                        method: 'post',
+                        action: `/image/${imageLocation}/remove`,
+                      }
                     );
                   }
                 }}
@@ -144,5 +144,3 @@ export function Image({ props }: { props: RenderElementProps }) {
     </R.Flex>
   );
 }
-
-

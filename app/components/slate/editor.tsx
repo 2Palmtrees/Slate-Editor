@@ -6,19 +6,20 @@ import {
   type RenderElementProps,
   type RenderLeafProps,
 } from 'slate-react';
-import { createEditor, type Descendant } from 'slate';
+import { createEditor, Node, type Descendant } from 'slate';
 import * as R from '@radix-ui/themes';
 import { withHistory } from 'slate-history';
 import Toolbar, { type AlignType } from './toolbar';
 import { isAlignElement } from './utils';
 import { CheckIcon } from '@radix-ui/react-icons';
-import { withTable } from './plugins/slate-table';
+import { TableCursor, TableEditor, withTable } from './plugins/slate-table';
 import { Table, Td } from './plugins/table/elements';
 import withImages from './plugins/images/with-images';
 import type { CustomEditor } from './custom-types';
 import { Image } from './plugins/images/image';
 import { withCorrectVoidBehavior } from './plugins/with-correct-void-behavior';
 import { Figure } from './plugins/images/figure';
+import isHotkey from 'is-hotkey';
 
 export default function SlateEditor({
   content,
@@ -215,6 +216,24 @@ export default function SlateEditor({
     []
   );
 
+  const HOTKEYS = useMemo(
+    () => ({
+      // Formatting
+      BOLD: isHotkey('mod+b'),
+      ITALIC: isHotkey('mod+i'),
+      UNDERLINE: isHotkey('mod+u'),
+
+      // Navigation
+      ARROW_UP: isHotkey('up'),
+      ARROW_DOWN: isHotkey('down'),
+      ARROW_LEFT: isHotkey('left'),
+      ARROW_RIGHT: isHotkey('right'),
+      TAB: isHotkey('tab'),
+      SHIFT_TAB: isHotkey('shift+tab'),
+    }),
+    []
+  );
+
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     []
@@ -246,6 +265,47 @@ export default function SlateEditor({
         spellCheck
         autoFocus
         style={{ padding: '1rem' }}
+        onKeyDown={(event) => {
+          // Prevent inserting another 'figcaption' if in it and Enter is pressed.
+          if (event.key === 'Enter') {
+            const selectedElement = Node.descendant(
+              editor,
+              editor.selection.anchor.path.slice(0, -1)
+            );
+            if (selectedElement.type === 'figcaption') {
+              event.preventDefault();
+            }
+          }
+          if (TableCursor.isInTable(editor)) {
+            switch (true) {
+              case HOTKEYS.ARROW_DOWN(event) &&
+                TableCursor.isOnEdge(editor, 'bottom'):
+                event.preventDefault();
+                return TableCursor.downward(editor);
+              case HOTKEYS.ARROW_UP(event) &&
+                TableCursor.isOnEdge(editor, 'top'):
+                event.preventDefault();
+                return TableCursor.upward(editor);
+              case HOTKEYS.ARROW_RIGHT(event) &&
+                TableCursor.isOnEdge(editor, 'end'):
+                event.preventDefault();
+                return TableCursor.forward(editor);
+              case HOTKEYS.ARROW_LEFT(event) &&
+                TableCursor.isOnEdge(editor, 'start'):
+                event.preventDefault();
+                return TableCursor.backward(editor);
+              case HOTKEYS.TAB(event):
+                if (TableCursor.isInLastCell(editor)) {
+                  TableEditor.insertRow(editor);
+                }
+                event.preventDefault();
+                return TableCursor.forward(editor, { mode: 'all' });
+              case HOTKEYS.SHIFT_TAB(event):
+                event.preventDefault();
+                return TableCursor.backward(editor, { mode: 'all' });
+            }
+          }
+        }}
       />
     </Slate>
   );

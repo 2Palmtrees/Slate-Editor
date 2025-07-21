@@ -12,12 +12,13 @@ import { sharpenImage } from './sharpen';
 
 export async function action({ request }: ActionFunctionArgs) {
   let imageId = crypto.randomBytes(8).toString('hex');
+  let imageLocation = 'content-item-' + imageId
   const uploadHandler = async (fileUpload: FileUpload) => {
     if (
       fileUpload.fieldName === 'image' &&
       fileUpload.type.startsWith('image/')
     ) {
-      return await sharpenImage(imageId, fileUpload);
+      return await sharpenImage(imageLocation, fileUpload);
     }
   };
   const errors = {};
@@ -40,7 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
   if (Object.keys(errors).length > 0) {
     return data({ errors }, { status: 400 });
   } else {
-    return { imageId };
+    return { imageLocation };
   }
 }
 

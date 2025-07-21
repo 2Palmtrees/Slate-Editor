@@ -13,9 +13,9 @@ export const resizeImages: {
   { name: 'small', size: 500 },
 ];
 
-export async function sharpenImage(imageId: string, file: File) {
+export async function sharpenImage(imageLocation: string, file: File) {
   for await (const element of resizeImages) {
-    let s3StorageKey = `${imageId}-${element.name}`;
+    let s3StorageKey = `${imageLocation}-${element.name}`;
     let data = await sharp(await file.arrayBuffer())
       .rotate()
       .resize(element.size, element.size, {

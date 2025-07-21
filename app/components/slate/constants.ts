@@ -1,4 +1,7 @@
-import type { InsertTableOptions, WithTableOptions } from "./plugins/slate-table/options";
+import type {
+  InsertTableOptions,
+  WithTableOptions,
+} from './plugins/slate-table/options';
 
 export const LIST_TYPES = ['list', 'list-numbered', 'list-checks'] as const;
 export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'] as const;
