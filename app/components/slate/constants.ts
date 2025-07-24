@@ -29,3 +29,4 @@ export const DEFAULT_WITH_TABLE_OPTIONS = {
   withSelection: true,
   withSelectionAdjustment: true,
 } as const satisfies WithTableOptions;
+

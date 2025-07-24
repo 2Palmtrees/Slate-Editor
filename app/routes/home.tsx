@@ -1,58 +1,41 @@
 import SlateEditor from '~/components/slate/editor';
 import type { Route } from './+types/home';
-import { Button, Container, Section } from '@radix-ui/themes';
-import { Form } from 'react-router';
-import { getSession } from '~/sessions.server';
+import { Button, Flex } from '@radix-ui/themes';
+import { useFetcher } from 'react-router';
+import type { Item } from './add-item';
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: 'New React Router App' },
-    { name: 'description', content: 'Welcome to React Router!' },
-  ];
+export async function clientLoader({}: Route.ClientLoaderArgs) {
+  let data = localStorage.getItem('items');
+  let items: Item[] = [];
+  if (data) {
+    items = await JSON.parse(data);
+  }
+  return { items };
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getSession(request.headers.get('Cookie'));
-  const userId = session.get('userId');
-  return { userId };
+export default function Home({ loaderData }: Route.ComponentProps) {
+  let { items } = loaderData;
+  let fetcher = useFetcher();
+
+  // console.log('items', items);
+
+  return (
+    <>
+      {items.length > 0 ? (
+        items.map((item) => <SlateEditor key={item.id} item={item} />)
+      ) : (
+        <Flex align='center' justify='center' my='2'>
+          <fetcher.Form method='post' action='add'>
+            <Button>Add an item</Button>
+          </fetcher.Form>
+        </Flex>
+      )}
+    </>
+  );
 }
 
-export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
-  const serverData = await serverLoader();
-  const clientData = localStorage.getItem('content');
-  return {
-    ...serverData,
-    clientData,
-  };
-}
 clientLoader.hydrate = true as const;
 
 export function HydrateFallback() {
   return <p>Skeleton rendered during SSR</p>;
-}
-
-export default function Home({ loaderData }: Route.ComponentProps) {
-  const { clientData, userId } = loaderData;
-  const isAdmin = userId === '1';
-
-  return (
-    <Container>
-      {isAdmin ? (
-        <Form action='/logout' method='post'>
-          <Button type='submit' color='red'>
-            Logout
-          </Button>
-        </Form>
-      ) : (
-        <Form action='/login' method='post'>
-          <Button type='submit' color='green'>
-            Login
-          </Button>
-        </Form>
-      )}
-      <Section >
-        <SlateEditor content={clientData} isAdmin={isAdmin} />
-      </Section>
-    </Container>
-  );
 }

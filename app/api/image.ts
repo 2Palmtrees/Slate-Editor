@@ -1,5 +1,5 @@
-import { fileStorageS3 } from '~/image-storage.server';
-import type { Route } from './+types/file';
+import { fileStorageS3 } from '~/file-storage.server';
+import type { Route } from './+types/image';
 
 export async function loader({ params }: Route.LoaderArgs) {
   const file = await fileStorageS3.get(params.storageKey);

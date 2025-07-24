@@ -1,5 +1,4 @@
 import { Editor, Element, Transforms } from 'slate';
-import { useSlate } from 'slate-react';
 import type {
   CustomEditor,
   CustomElementType,

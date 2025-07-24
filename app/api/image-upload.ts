@@ -6,8 +6,7 @@ import {
 } from '@mjackson/form-data-parser';
 import * as crypto from 'node:crypto';
 import { data, redirect, type ActionFunctionArgs } from 'react-router';
-import { getSession } from '~/sessions.server';
-import type { Route } from './+types/file-upload';
+// import { getSession } from '~/sessions.server';
 import { sharpenImage } from './sharpen';
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -45,9 +44,9 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  let session = await getSession(request.headers.get('Cookie'));
-  if (!session.has('userId')) {
-    return redirect('/');
-  }
-}
+// export async function loader({ request }: Route.LoaderArgs) {
+//   let session = await getSession(request.headers.get('Cookie'));
+//   if (!session.has('userId')) {
+//     return redirect('/');
+//   }
+// }

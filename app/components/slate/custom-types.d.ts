@@ -172,13 +172,6 @@ export interface Td {
   children: Descendant[];
 }
 
-// export interface Text {
-//   text: string;
-//   bold?: boolean;
-//   italic?: boolean;
-//   underline?: boolean;
-// }
-
 export type CustomElementWithAlign =
   | ParagraphElement
   | HeadingElement
@@ -190,7 +183,6 @@ export type CustomElementWithAlign =
   | BlockQuoteElement
   | ListElement
   | ListChecksItemElement
-  | Th
   | ImageElement
   | FigureCaptionElement;
 

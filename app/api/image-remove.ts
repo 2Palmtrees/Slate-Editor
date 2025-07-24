@@ -1,5 +1,5 @@
-import { fileStorageS3 } from '~/image-storage.server';
-import type { Route } from './+types/file-remove';
+import { fileStorageS3 } from '~/file-storage.server';
+import type { Route } from './+types/image-remove';
 import { resizeImages } from './sharpen';
 
 export async function action({ params }: Route.ActionArgs) {

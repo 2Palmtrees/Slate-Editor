@@ -34,7 +34,9 @@ export function Image({ props }: { props: RenderElementProps }) {
   if (element.style === 'stretch') {
     imageSize = 'large';
   }
-  let imageSrc = `${element.url}-${imageSize}`;
+  let imageSrc = element.url.startsWith('http://localhost')
+    ? `${element.url}-${imageSize}`
+    : element.url;
 
   return (
     <R.Flex

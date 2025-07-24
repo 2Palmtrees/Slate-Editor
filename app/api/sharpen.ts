@@ -1,4 +1,4 @@
-import { fileStorageS3 } from '~/image-storage.server';
+import { fileStorageS3 } from '~/file-storage.server';
 import sharp from 'sharp';
 
 export type ImageSizes = 'xlarge' | 'large' | 'medium' | 'small';

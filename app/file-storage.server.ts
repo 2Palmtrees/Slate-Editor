@@ -1,4 +1,4 @@
-import { LocalFileStorage } from '@mjackson/file-storage/local';
+// import { LocalFileStorage } from '@mjackson/file-storage/local';
 import { S3Client } from '@aws-sdk/client-s3';
 import { S3FileStorage } from './api/s3-file-storage';
 
@@ -10,13 +10,12 @@ const s3Client = new S3Client({
   },
 });
 
-export const fileStorage = new LocalFileStorage('./uploads/images');
-
+// export const fileStorage = new LocalFileStorage('./uploads/images');
 export const fileStorageS3 = new S3FileStorage(s3Client, 'bart-joostink-test1');
 
-export function getStorageKey(
-  imageId: string,
-  size: 'xlarge' | 'large' | 'medium' | 'small'
-) {
-  return `${imageId}-${size}`;
-}
+// export function getImageStorageKey(
+//   imageId: string,
+//   size: 'xlarge' | 'large' | 'medium' | 'small'
+// ) {
+//   return `${imageId}-${size}`;
+// }
