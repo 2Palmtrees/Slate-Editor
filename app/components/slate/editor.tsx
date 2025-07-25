@@ -100,6 +100,7 @@ export default function SlateEditor({ item }: { item: Item }) {
 
     setHasBackground((prev) => !prev);
 
+    // Invert colors on some table elements.
     Transforms.setNodes(
       editor,
       { invert: !hasBackground },
