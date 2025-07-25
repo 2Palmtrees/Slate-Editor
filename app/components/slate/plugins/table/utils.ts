@@ -111,10 +111,22 @@ export function toggleTableFormat(
   console.log('Table', table);
 
   const [, path] = table;
+  console.log('table', table[0].children);
 
   function tableFormat() {
     switch (format) {
       case 'hasBackplate':
+        Transforms.setNodes(
+          editor,
+          { hasBackplate: !isActive },
+          {
+            at: path,
+            match: (n) =>
+              !Editor.isEditor(n) &&
+              Element.isElement(n) &&
+              (n.type === 'table-cell' || n.type === 'header-cell'),
+          }
+        );
         return { hasBackplate: !isActive };
       case 'isStretched':
         return { isStretched: !isActive };
@@ -125,12 +137,10 @@ export function toggleTableFormat(
       case 'tableAlign': {
         return { tableAlign: align };
       }
-
       default:
         return {};
     }
   }
-
   Transforms.setNodes(editor, tableFormat(), {
     at: path,
   });

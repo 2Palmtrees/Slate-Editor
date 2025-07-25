@@ -71,8 +71,8 @@ export default function Element({
             align === 'center'
               ? 'center'
               : align === 'right'
-              ? 'end'
-              : undefined
+                ? 'end'
+                : undefined
           }
         >
           <li style={style} {...attributes}>
@@ -94,8 +94,8 @@ export default function Element({
             element.tableAlign === 'center'
               ? 'center'
               : element.tableAlign === 'right'
-              ? 'end'
-              : 'start'
+                ? 'end'
+                : 'start'
           }
         >
           <R.Box
@@ -104,7 +104,14 @@ export default function Element({
               sm: element.isStretched ? '100%' : '50%',
             }}
           >
-            <R.Table.Root variant={element.hasBackplate ? 'surface' : 'ghost'}>
+            <R.Table.Root
+              variant={element.hasBackplate ? 'surface' : 'ghost'}
+              style={{
+                backgroundColor: element.hasBackplate
+                  ? 'var(--gray-1)'
+                  : 'unset',
+              }}
+            >
               {children}
             </R.Table.Root>
           </R.Box>
@@ -130,25 +137,45 @@ export default function Element({
       );
     case 'table-row':
       return (
-        <R.Table.Row
-          {...attributes}
-          style={{
-            color: item.hasBackground ? 'var(--gray-1)' : 'unset',
-            boxShadow: 'inset 0 -1px white',
-          }}
-        >
+        <R.Table.Row {...attributes} style={style}>
           {children}
         </R.Table.Row>
       );
     case 'header-cell':
       return (
-        <R.Table.ColumnHeaderCell {...attributes} style={style}>
+        <R.Table.ColumnHeaderCell
+          {...attributes}
+          // style={style}
+          style={{
+            boxShadow:
+              element.invert && !element.hasBackplate
+                ? 'inset 0 -1px var(--gray-1)'
+                : 'inset 0 -1px var(--gray-a5)',
+            color:
+              element.invert && !element.hasBackplate
+                ? 'var(--gray-1)'
+                : 'var(--gray-12)',
+          }}
+        >
           {children}
         </R.Table.ColumnHeaderCell>
       );
     case 'table-cell':
       return (
-        <R.Table.Cell {...attributes} style={style}>
+        <R.Table.Cell
+          {...attributes}
+          // style={style}
+          style={{
+            boxShadow:
+              element.invert && !element.hasBackplate
+                ? 'inset 0 -1px var(--gray-1)'
+                : 'inset 0 -1px var(--gray-a5)',
+            color:
+              element.invert && !element.hasBackplate
+                ? 'var(--gray-1)'
+                : 'var(--gray-12)',
+          }}
+        >
           {children}
         </R.Table.Cell>
       );

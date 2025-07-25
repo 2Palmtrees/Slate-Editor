@@ -8,8 +8,8 @@ import {
 export default [
   index('routes/home.tsx'),
     route('add','routes/add-item.ts'),
-    route('edit','routes/edit-item.ts'),
-    route('delete','routes/delete-item.ts'),
+    route(':id/edit','routes/edit-item.ts'),
+    route(':id/delete','routes/delete-item.ts'),
   ...prefix('image', [
     route('upload', 'api/image-upload.ts'),
     route(':storageKey', 'api/image.ts'),

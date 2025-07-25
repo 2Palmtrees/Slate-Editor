@@ -6,7 +6,13 @@ import {
   type RenderElementProps,
   type RenderLeafProps,
 } from 'slate-react';
-import { createEditor, Node } from 'slate';
+import {
+  createEditor,
+  Editor,
+  Node,
+  Element as SlateElement,
+  Transforms,
+} from 'slate';
 import * as R from '@radix-ui/themes';
 import { withHistory } from 'slate-history';
 import Toolbar from './toolbar';
@@ -25,7 +31,7 @@ export default function SlateEditor({ item }: { item: Item }) {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [hasBackground, setHasBackground] = useState(item.hasBackground);
 
-  console.log('hasBackground:', hasBackground);
+  // console.log('hasBackground:', hasBackground);
 
   const editor = useMemo(
     () =>
@@ -80,6 +86,33 @@ export default function SlateEditor({ item }: { item: Item }) {
     return <Leaf {...props} />;
   }, []);
 
+  async function changeBackground() {
+    await fetcher.submit(
+      JSON.stringify({
+        hasBackground: !hasBackground,
+      }),
+      {
+        method: 'put',
+        action: `${item.id}/edit`,
+        encType: 'application/json',
+      }
+    );
+
+    setHasBackground((prev) => !prev);
+
+    Transforms.setNodes(
+      editor,
+      { invert: !hasBackground },
+      {
+        at: [],
+        match: (n) =>
+          !Editor.isEditor(n) &&
+          SlateElement.isElement(n) &&
+          (n.type === 'table-cell' || n.type === 'header-cell'),
+      }
+    );
+  }
+
   return (
     <Slate
       editor={editor}
@@ -89,13 +122,12 @@ export default function SlateEditor({ item }: { item: Item }) {
           (op) => 'set_selection' !== op.type
         );
         if (isAstChange) {
-          let updatedItem: Partial<Item> = {
-            id: item.id,
+          let updates: Partial<Item> = {
             content: value,
           };
-          fetcher.submit(JSON.stringify(updatedItem), {
+          fetcher.submit(JSON.stringify(updates), {
             method: 'put',
-            action: 'edit',
+            action: `${item.id}/edit`,
             encType: 'application/json',
           });
         }
@@ -116,22 +148,23 @@ export default function SlateEditor({ item }: { item: Item }) {
             >
               {isReadOnly ? 'Edit' : 'Save'}
             </R.Button>
-            <R.Button
-              onClick={() => {
-                setHasBackground(!hasBackground);
-                let updatedItem: Partial<Item> = {
-                  id: item.id,
-                  hasBackground: !hasBackground,
-                };
-                fetcher.submit(JSON.stringify(updatedItem), {
-                  method: 'put',
-                  action: 'edit',
-                  encType: 'application/json',
-                });
-              }}
-            >
+            <R.Button variant='surface' onClick={() => changeBackground()}>
               {hasBackground ? 'Remove Background' : 'Set Background'}
             </R.Button>
+            <fetcher.Form
+              method='post'
+              action={`${item.id}/delete`}
+              onSubmit={(event) => {
+                const response = confirm(
+                  'Please confirm you want to delete this record.'
+                );
+                if (!response) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <R.Button variant='surface'>Delete</R.Button>
+            </fetcher.Form>
           </R.Flex>
           <Editable
             readOnly={isReadOnly}

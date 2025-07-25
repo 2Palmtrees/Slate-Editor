@@ -159,6 +159,8 @@ export interface Tr {
 }
 export interface Th {
   type: 'header-cell';
+  invert?: boolean;
+  hasBackplate?: boolean;
   align?: string;
   rowSpan?: number;
   colSpan?: number;
@@ -166,7 +168,9 @@ export interface Th {
 }
 export interface Td {
   type: 'table-cell';
-  // align?: string;
+  invert?: boolean;
+  hasBackplate?: boolean;
+  align?: string;
   rowSpan?: number;
   colSpan?: number;
   children: Descendant[];
